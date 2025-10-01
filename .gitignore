@@ -1,0 +1,11 @@
+# Virtual Environment
+venv/
+
+# csv files
+*.csv
+
+# log files
+*.log
+
+# model files
+models/*

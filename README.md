@@ -14,7 +14,7 @@ This repository contains a synthetic smart home IoT dataset designed for anomaly
 - **Sampling Rate**: 5-minute intervals
 - **Training set**:80 weeks traning set
     - No anomaly appear all possitive data
-- **Validation set**: 10 weeks traning set
+- **Validation set**: 10 weeks validation set
 - **Testing set**: 10 weeks default anomaly appear rate
 
 ### Data Structure
