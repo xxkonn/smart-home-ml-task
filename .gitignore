@@ -7,5 +7,4 @@ venv/
 # log files
 *.log
 
-# model files
-models/*
+*.pyc
