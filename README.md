@@ -120,7 +120,7 @@ For this smart home IoT anomaly detection task, I considered several key require
 
 ## Models Evaluated
 
-### ✅ **Isolation Forest** (Selected)
+### **Isolation Forest** (Selected)
 **Advantages:**
 - **Unsupervised**: No labeled training data required - perfect for real-world deployment
 - **Lightweight**: Tree-based structure suitable for edge computing  
@@ -134,7 +134,7 @@ For this smart home IoT anomaly detection task, I considered several key require
 - Optimized parameters: 900 estimators, bootstrap sampling, warm-start for stability
 - Achieved 96.30% accuracy with excellent anomaly type coverage
 
-### 🔄 **Random Forest Classifier** (Future Consideration)
+### **Random Forest Classifier** (Future Consideration)
 **Advantages:**
 - **High Performance**: Excellent accuracy when all anomaly types are known
 - **Feature Importance**: Built-in feature ranking capabilities
@@ -147,7 +147,7 @@ For this smart home IoT anomaly detection task, I considered several key require
 
 **Use Case**: Suitable for controlled environments where anomaly types are well-defined and labeled data is available.
 
-### 🔄 **CNN Autoencoder** (Long-term Exploration)  
+### **CNN Autoencoder** (Long-term Exploration)  
 **Advantages:**
 - **Deep Unsupervised Learning**: Can learn complex temporal patterns automatically
 - **Time-Series Native**: Naturally handles sequential sensor data
@@ -243,3 +243,68 @@ Based on our optimization tests, the recommended model configurations are:
 | **estimators_900** | 96.30% | 78.28% | **Optimal overall performance** |
 
 **Recommendation**: Use `estimators_900` for production - it achieves the best balance of 96.30% accuracy, 78.28% F1-score, and computational efficiency.
+
+## Productionization Strategy
+
+### Model Deployment Architecture
+
+For productionizing this smart home anomaly detection system, I propose a hybrid edge-cloud architecture that balances performance, privacy, and scalability:
+
+#### Edge Deployment
+- **Model Selection**: Deploy the Isolation Forest model directly on the smart home hub (edge device)
+	- Lightweight & efficient: Runs with millisecond inference on constrained hardware.
+	- Privacy-preserving: Sensor data stays local; no need to send raw data to the cloud.
+	- Adaptable: By monitoring false positives (FPs) and false negatives (FNs), we can detect when user living patterns shift (seasonal changes, new appliances).
+	- Retraining: The hub model should be retrained every 2–4 weeks on recent data to stay up to date with evolving household patterns.
+
+#### Cloud Integration
+- **Purpose**: Leverage cloud resources for model improvement and large-scale pattern analysis
+- **Implementation**: 
+	- Cloud model training: Long-term data (months to years) from multiple homes could train more expressive models.
+  - Provide model updates and improvements back to edge devices
+- **Privacy Consideration**:
+  - User need to aggree with data sharing.
+
+### Serving Strategy: Real-time vs. Batch Processing
+
+A perfect balence is always using correct modem base on demand. For some of the alarm such as night intrusion, we need to trigger immediately. For other alarm such as refrigerator door left open, we can wait for a long time for better results. Therefore, we need to use different strategy for different alarm.
+
+
+#### Real-time Inference
+
+- **Urgency-based alarm strategy**
+Different anomalies have different urgency levels, and the serving approach should match the criticality of the event:
+  - Immediate / Critical (static rules, no delay)
+	- Examples:
+        - Gas leak detected
+        - Smoke/CO₂ spike
+        - Unexpected window/door open at night
+
+- **Fast / Near Real-Time**: Isolation Forest, short windows
+	- Examples:
+        - Air conditioner failure during a heatwave
+        - Freezer power cut or flatlined consumption
+        - Unusual motion pattern (ouside) during the night
+
+#### Batch Processing
+Isolation Forest by itself does not capture long-term temporal persistence — it only sees the features provided at inference time. While engineered time-window features (e.g., rolling means, streak counters) can extend its usefulness, some anomaly types require modeling longer sequences or non-linear temporal dependencies.
+
+- **For example**: analyzed using more complex models such as LSTMs, CNNs, or Transformers. These models can detect:
+	-   Gradual appliance degradation (e.g., rising energy consumption over weeks)
+	-   Seasonal behavior shifts (summer vs. winter usage)
+    -   Rodents animal appearance increases (Burrow under foundations, chew insulation, wires, and even plastic pipes.)
+
+
+### Performance Monitoring and Model Maintenance
+
+#### Monitoring Strategy
+- **Local Metrics**: Track False Positive (FP) and False Negative (FN) rates on the edge device
+- **Pattern Drift Detection**: Monitor when FP/FN rates increase, indicating lifestyle pattern shifts
+
+#### Retraining Schedule
+Human are unpredictable, and lifestyle patterns change over time. Therefore, we need to retrain the model frequently to stay up to date with evolving household patterns.
+
+- **Frequent Updates**: Retrain every 2-4 weeks based on local pattern drift indicators
+- **Incremental Learning**: Continuously update model parameters with new normal patterns
+- **Emergency Retraining**: Trigger immediate retraining when anomaly rates exceed thresholds
+
