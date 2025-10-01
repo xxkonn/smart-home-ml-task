@@ -116,3 +116,70 @@ For model picking here are some key points I would consider:
 - Isolation forest
     - Unsupervised model, which make sense because in real world, we don't have labeled data for anomaly detection.
     - It's not a time series model, I will enigneer the feature help the model pick up the sensor pattern regards time.
+
+## Quick Start
+
+### Prerequisites
+```bash
+# Activate virtual environment
+source venv/bin/activate
+
+# Install required packages (if not already installed)
+pip install -r requirements.txt
+```
+
+### Training Models
+
+#### Option 1: Quick Training (3 Optimized Models)
+```bash
+# Run the automated training script for 3 optimized models
+bash src/example_training.sh
+```
+
+This will train 3 models with different configurations:
+- **estimators_300**: Conservative (300 estimators, high recall)
+- **estimators_500**: Balanced (500 estimators, good performance)  
+- **estimators_700**: Precision-focused (700 estimators, best F1-score)
+
+#### Option 2: Custom Training
+```bash
+# Train a custom model with specific parameters
+python src/train_isolation_forest.py \
+  --n-estimators 500 \
+  --max-samples 0.9 \
+  --contamination 0.02 \
+  --max-features 0.8 \
+  --bootstrap \
+  --warm-start \
+  --model-name my_custom_model
+```
+
+### Feature Analysis
+
+Run AUC feature diagnostic to analyze feature quality:
+```bash
+# Run feature analysis examples
+python src/example_auc_diagnostic_usage.py
+```
+
+This will generate feature importance reports and visualizations in various output directories.
+
+### Results
+
+- **Models**: Saved in `models/` directory as `.joblib` files
+- **Performance Results**: JSON files in `models/results/`
+- **Training Logs**: Detailed logs in `models/logs/`
+- **Comprehensive Report**: See `models/results/results_v1.md` for detailed analysis
+
+### Model Performance Summary
+
+Based on our optimization tests, the recommended model configurations are:
+
+| Model | Accuracy | F1-Score | Use Case |
+|-------|----------|----------|----------|
+| **estimators_300** | 94.81% | 72.10% | Maximum recall (99.12%) - catch all anomalies |
+| **estimators_500** | 96.23% | 77.97% | Balanced performance |
+| **estimators_700** | 96.28% | 78.19% | Best precision (64.83%) |
+| **estimators_900** | 96.30% | 78.28% | **Optimal overall performance** |
+
+**Recommendation**: Use `estimators_900` for production - it achieves the best balance of 96.30% accuracy, 78.28% F1-score, and computational efficiency.

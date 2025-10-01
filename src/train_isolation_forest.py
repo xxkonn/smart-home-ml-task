@@ -48,11 +48,12 @@ class IsolationForestTrainer:
         
         # Model parameters (exposed for fine-tuning)
         self.model_params = {
-            'n_estimators': 100,
-            'contamination': 0.1,
-            'max_samples': 'auto',
-            'max_features': 1.0,
-            'bootstrap': False,
+            'n_estimators': 500,
+            'contamination': 0.02,
+            'max_samples': 0.6,
+            'max_features': 0.8,
+            'bootstrap': True,
+            'warm_start': True,
             'random_state': 42,
             'n_jobs': -1
         }
@@ -73,7 +74,6 @@ class IsolationForestTrainer:
         }
         
         self.features_used = []
-        self.scaler = StandardScaler()
         
     def setup_logging(self):
         """Setup comprehensive logging system."""
@@ -182,15 +182,12 @@ class IsolationForestTrainer:
         # Prepare training data (only normal samples)
         X_train = train_features[self.features_used]
         
-        # Scale features
-        X_train_scaled = self.scaler.fit_transform(X_train)
-        
-        # Train model
+        # Train model (no scaling needed for Isolation Forest)
         model = IsolationForest(**self.model_params)
-        model.fit(X_train_scaled)
+        model.fit(X_train)
         
         self.logger.info(f"Model training completed with {len(X_train)} samples")
-        self.logger.info(f"Feature scaling applied with scaler: {type(self.scaler).__name__}")
+        self.logger.info("No feature scaling applied - using raw features for optimal tree-based performance")
         
         return model
     
@@ -211,16 +208,15 @@ class IsolationForestTrainer:
         # Engineer features
         eval_features = self.engineer_features(eval_data)
         
-        # Prepare evaluation data
+        # Prepare evaluation data (no scaling needed)
         X_eval = eval_features[self.features_used]
-        X_eval_scaled = self.scaler.transform(X_eval)
         
         # Get true labels
         y_true = eval_data['label'].values
         anomaly_types = eval_data['anomaly_type'].values
         
         # Predict anomalies (-1 for anomaly, 1 for normal)
-        predictions = model.predict(X_eval_scaled)
+        predictions = model.predict(X_eval)
         
         # Convert to binary format (1 for anomaly, 0 for normal)
         y_pred = (predictions == -1).astype(int)
@@ -320,7 +316,6 @@ class IsolationForestTrainer:
         model_path = self.models_root / f"{model_name}.joblib"
         joblib.dump({
             'model': model,
-            'scaler': self.scaler,
             'features_used': self.features_used,
             'model_params': self.model_params,
             'feature_config': self.feature_config
@@ -393,16 +388,18 @@ def parse_arguments():
     )
     
     # Model parameters
-    parser.add_argument('--n-estimators', type=int, default=100,
+    parser.add_argument('--n-estimators', type=int, default=500,
                        help='Number of base estimators in the ensemble')
-    parser.add_argument('--contamination', type=float, default=0.1,
+    parser.add_argument('--contamination', type=float, default=0.02,
                        help='Expected proportion of outliers in the data (0.0 to 0.5)')
-    parser.add_argument('--max-samples', type=str, default='auto',
+    parser.add_argument('--max-samples', type=str, default='0.6',
                        help='Number of samples to draw to train each base estimator (int or "auto")')
-    parser.add_argument('--max-features', type=float, default=1.0,
+    parser.add_argument('--max-features', type=float, default=0.8,
                        help='Number of features to draw to train each base estimator (0.0 to 1.0)')
-    parser.add_argument('--bootstrap', action='store_true', default=False,
+    parser.add_argument('--bootstrap', action='store_true', default=True,
                        help='Whether samples are drawn with replacement')
+    parser.add_argument('--warm-start', action='store_true', default=True,
+                       help='When set to True, reuse the solution of the previous call to fit')
     parser.add_argument('--random-state', type=int, default=42,
                        help='Random state for reproducibility')
     parser.add_argument('--n-jobs', type=int, default=-1,
@@ -439,7 +436,7 @@ def main():
     max_samples = args.max_samples
     if max_samples != 'auto':
         try:
-            max_samples = int(max_samples)
+            max_samples = float(max_samples)
         except ValueError:
             print(f"Warning: Invalid max_samples value '{max_samples}', using 'auto'")
             max_samples = 'auto'
@@ -451,6 +448,7 @@ def main():
         'max_samples': max_samples,
         'max_features': args.max_features,
         'bootstrap': args.bootstrap,
+        'warm_start': args.warm_start,
         'random_state': args.random_state,
         'n_jobs': args.n_jobs
     }

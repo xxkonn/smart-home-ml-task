@@ -268,7 +268,7 @@ def add_enhanced_motion_features(df: pd.DataFrame) -> pd.DataFrame:
         df["time_since_last_motion"] = compute_time_since_last(df[COL_MOTION])
     
     # Motion activity rates over different windows
-    for window in [6, 12, 24, 36, 72]:  # 30m, 1h, 2h, 3h, 6h
+    for window in [6, 12, 36, 72]:  # 30m, 1h, 2h, 3h, 6h
         minutes = window * 5
         
         if grouped is not None:
@@ -308,7 +308,7 @@ def add_enhanced_door_window_features(df: pd.DataFrame) -> pd.DataFrame:
             df["door_open_streak"] = compute_streak(df[COL_DOOR])
             df["time_since_door_opened"] = compute_time_since_last(df[COL_DOOR])
         
-        for window in [6, 12, 24, 36]:  # 30m, 1h, 2h, 3h
+        for window in [6, 12, 36]:  # 30m, 1h, 3h
             minutes = window * 5
             
             if grouped is not None:
@@ -327,7 +327,7 @@ def add_enhanced_door_window_features(df: pd.DataFrame) -> pd.DataFrame:
             df["window_open_streak"] = compute_streak(df[COL_WINDOW])
             df["time_since_window_opened"] = compute_time_since_last(df[COL_WINDOW])
         
-        for window in [6, 12, 24, 36]:  # 30m, 1h, 2h, 3h
+        for window in [6, 12, 24]:  # 30m, 1h, 3h
             minutes = window * 5
             
             if grouped is not None:
@@ -351,16 +351,17 @@ def add_cross_sensor_features(df: pd.DataFrame) -> pd.DataFrame:
         df["temp_when_window_closed"] = df[COL_TEMP] * (1 - df[COL_WINDOW])
         
         # Temperature differential with window state changes
-        grouped = df.groupby("house_id", group_keys=False) if "house_id" in df.columns else None
+        grouped = df.groupby("house_id", group_keys=False) if "house_id" in df.columns else [("all", df)]
         
         # Look for temperature changes around window events
         for lag in [1, 3, 6]:
-            if grouped is not None:
-                window_change = grouped[COL_WINDOW].transform(lambda s: s.diff(lag).abs())
-                temp_change = grouped[COL_TEMP].transform(lambda s: s.diff(lag).abs())
-            else:
-                window_change = df[COL_WINDOW].diff(lag).abs()
-                temp_change = df[COL_TEMP].diff(lag).abs()
+            window_change = grouped[COL_WINDOW].transform(
+                lambda s: s.diff(lag).abs()
+            ) if "house_id" in df.columns else df[COL_WINDOW].diff(lag).abs()
+            
+            temp_change = grouped[COL_TEMP].transform(
+                lambda s: s.diff(lag).abs()
+            ) if "house_id" in df.columns else df[COL_TEMP].diff(lag).abs()
             
             df[f"temp_change_with_window_{lag*5}m"] = temp_change * window_change
     

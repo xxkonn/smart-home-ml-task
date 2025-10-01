@@ -10,13 +10,13 @@ import sys
 import os
 from pathlib import Path
 
-# Add the src directory to the path
-sys.path.append(os.path.join(os.path.dirname(__file__), 'src'))
+# Add the current directory to the path (since we're now in src/)
+sys.path.append(os.path.dirname(__file__))
 
 from auc_feature_diagnostic import AUCFeatureDiagnostic
 
 
-def example_single_file_analysis():
+def example_single_file_analysis(data_prefix=""):
     """
     Example: Analyze a single test file
     """
@@ -29,7 +29,7 @@ def example_single_file_analysis():
     )
     
     # Run analysis on a single file
-    data_path = "data/test/house_091_smart_home.csv"
+    data_path = f"{data_prefix}data/test/house_091_smart_home.csv"
     diagnostic.run_full_diagnostic(
         data_path=data_path,
         sample_size=2000  # Use 2000 samples for faster analysis
@@ -38,7 +38,7 @@ def example_single_file_analysis():
     print(f"Results saved to: {diagnostic.output_dir}")
 
 
-def example_multiple_files_analysis():
+def example_multiple_files_analysis(data_prefix=""):
     """
     Example: Analyze multiple test files
     """
@@ -52,9 +52,9 @@ def example_multiple_files_analysis():
     
     # Analyze multiple files
     test_files = [
-        "data/test/house_091_smart_home.csv",
-        "data/test/house_092_smart_home.csv",
-        "data/test/house_093_smart_home.csv"
+        f"{data_prefix}data/test/house_091_smart_home.csv",
+        f"{data_prefix}data/test/house_092_smart_home.csv",
+        f"{data_prefix}data/test/house_093_smart_home.csv"
     ]
     
     diagnostic.run_full_diagnostic(
@@ -65,7 +65,7 @@ def example_multiple_files_analysis():
     print(f"Results saved to: {diagnostic.output_dir}")
 
 
-def example_directory_analysis():
+def example_directory_analysis(data_prefix=""):
     """
     Example: Analyze entire directory
     """
@@ -79,14 +79,14 @@ def example_directory_analysis():
     
     # Analyze entire test directory
     diagnostic.run_full_diagnostic(
-        data_path="data/test",
+        data_path=f"{data_prefix}data/test",
         sample_size=10000  # Larger sample from all files
     )
     
     print(f"Results saved to: {diagnostic.output_dir}")
 
 
-def example_programmatic_access():
+def example_programmatic_access(data_prefix=""):
     """
     Example: Access results programmatically
     """
@@ -100,7 +100,7 @@ def example_programmatic_access():
     
     # Run analysis
     diagnostic.run_full_diagnostic(
-        data_path="data/test/house_091_smart_home.csv",
+        data_path=f"{data_prefix}data/test/house_091_smart_home.csv",
         sample_size=1000
     )
     
@@ -139,17 +139,25 @@ def main():
     print("=" * 60)
     
     # Make sure we're in the right directory
-    if not os.path.exists("data/test"):
-        print("Error: Please run this script from the project root directory")
+    if not os.path.exists("../data/test") and not os.path.exists("data/test"):
+        print("Error: Please run this script from the src/ directory or project root")
         print("Current directory:", os.getcwd())
         return
     
+    # Adjust data paths based on current directory
+    if os.path.exists("data/test"):
+        # Running from project root
+        data_prefix = ""
+    else:
+        # Running from src/ directory  
+        data_prefix = "../"
+    
     try:
         # Run examples
-        example_single_file_analysis()
-        example_multiple_files_analysis() 
-        example_directory_analysis()
-        example_programmatic_access()
+        example_single_file_analysis(data_prefix)
+        example_multiple_files_analysis(data_prefix)
+        example_directory_analysis(data_prefix)
+        example_programmatic_access(data_prefix)
         
         print("\n" + "=" * 60)
         print("All examples completed successfully!")

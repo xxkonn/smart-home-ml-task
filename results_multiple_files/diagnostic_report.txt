@@ -1,0 +1,110 @@
+================================================================================
+AUC FEATURE DIAGNOSTIC REPORT
+================================================================================
+Generated on: 2025-10-01 13:46:37.938180
+Dataset shape: (5000, 132)
+Anomaly rate: 0.067
+Total features analyzed: 128
+
+OVERALL FEATURE QUALITY SUMMARY
+----------------------------------------
+Mean AUC: 0.533
+Median AUC: 0.532
+Std AUC: 0.094
+Min AUC: 0.282
+Max AUC: 0.729
+Features with AUC > 0.7: 3
+Features with AUC > 0.6: 33
+
+TOP 20 FEATURES BY COMPOSITE SCORE
+----------------------------------------
+82. fridge_cv_120m                 AUC: 0.729 Score: 0.760
+81. fridge_cv_60m                  AUC: 0.728 Score: 0.757
+108. time_since_door_opened         AUC: 0.282 Score: 0.751
+80. fridge_cv_30m                  AUC: 0.688 Score: 0.737
+127. power_temp_ratio               AUC: 0.321 Score: 0.722
+38. temp_max_120m                  AUC: 0.654 Score: 0.704
+78. fridge_power_ratio_6h          AUC: 0.353 Score: 0.703
+45. temp_max_360m                  AUC: 0.660 Score: 0.702
+43. temp_mean_360m                 AUC: 0.656 Score: 0.700
+27. temp_range_30m                 AUC: 0.626 Score: 0.697
+23. temp_std_30m                   AUC: 0.625 Score: 0.696
+66. fridge_mean_30m                AUC: 0.356 Score: 0.694
+68. fridge_median_30m              AUC: 0.361 Score: 0.694
+104. motion_rate_360m               AUC: 0.640 Score: 0.692
+36. temp_mean_120m                 AUC: 0.641 Score: 0.691
+ 3. power_consumption_fridge       AUC: 0.366 Score: 0.691
+69. fridge_mean_60m                AUC: 0.353 Score: 0.690
+71. fridge_median_60m              AUC: 0.365 Score: 0.690
+34. temp_range_60m                 AUC: 0.638 Score: 0.689
+30. temp_std_60m                   AUC: 0.635 Score: 0.687
+
+FEATURE GROUP ANALYSIS
+----------------------------------------
+TIME_FEATURES:
+  Count: 15
+  Mean AUC: 0.513
+  Max AUC: 0.630
+  Best feature: day_of_year
+
+TEMPERATURE_FEATURES:
+  Count: 52
+  Mean AUC: 0.539
+  Max AUC: 0.660
+  Best feature: temp_max_360m
+
+FRIDGE_FEATURES:
+  Count: 31
+  Mean AUC: 0.496
+  Max AUC: 0.729
+  Best feature: fridge_cv_120m
+
+MOTION_FEATURES:
+  Count: 14
+  Mean AUC: 0.583
+  Max AUC: 0.654
+  Best feature: motion_sum_180m
+
+DOOR_WINDOW_FEATURES:
+  Count: 14
+  Mean AUC: 0.571
+  Max AUC: 0.719
+  Best feature: door_open_rate_180m
+
+ORIGINAL_FEATURES:
+  Count: 2
+  Mean AUC: 0.472
+  Max AUC: 0.502
+  Best feature: is_late_evening
+
+DATA QUALITY ISSUES
+----------------------------------------
+No significant missing value issues detected.
+
+Features with >90% zero values:
+  temp_very_low: 100.0%
+  fridge_spike_30m: 99.8%
+  fridge_power_very_high: 99.4%
+  fridge_power_high: 99.3%
+  door_and_window_open: 98.9%
+  temp_volatile_30m: 98.8%
+  temp_extreme_high: 98.7%
+  temp_stable_120m: 98.5%
+  motion_with_door_open: 98.4%
+  fridge_power_very_low: 97.9%
+
+RECOMMENDATIONS
+----------------------------------------
+Recommended features for model training:
+  1. fridge_cv_120m (AUC: 0.729)
+  2. fridge_cv_60m (AUC: 0.728)
+  3. time_since_door_opened (AUC: 0.282)
+  4. fridge_cv_30m (AUC: 0.688)
+  5. power_temp_ratio (AUC: 0.321)
+  6. temp_max_120m (AUC: 0.654)
+  7. fridge_power_ratio_6h (AUC: 0.353)
+  8. temp_max_360m (AUC: 0.660)
+  9. temp_mean_360m (AUC: 0.656)
+  10. temp_range_30m (AUC: 0.626)
+
+Consider removing 27 features with AUC ≈ 0.5 (no discriminative power)
