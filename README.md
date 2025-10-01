@@ -244,6 +244,28 @@ Based on our optimization tests, the recommended model configurations are:
 
 **Recommendation**: Use `estimators_900` for production - it achieves the best balance of 96.30% accuracy, 78.28% F1-score, and computational efficiency.
 
+### 📊 Performance Visualizations
+
+#### ROC Curves - Validation & Test Sets
+![ROC Curves](models/results/plots/roc_curves_validation_test.png)
+
+#### AUC Score Comparison
+![AUC Comparison](models/results/plots/auc_comparison_bar_chart.png)
+
+#### Confusion Matrices - All Models
+![Confusion Matrices](models/results/plots/confusion_matrices_all_models.png)
+
+#### ROC Methodology Comparison
+![ROC Methodology](models/results/plots/roc_comparison_3point_vs_multipoint.png)
+
+**Key Insights from Visualizations:**
+- All models achieve excellent AUC scores (>0.96) indicating strong discrimination capability
+- Consistent performance between validation and test sets confirms model robustness
+- High recall rates (>98%) across all models ensure comprehensive anomaly detection
+- Confusion matrices show balanced performance with manageable false positive rates
+
+**📋 Full Analysis Report**: [`models/results/results_v1.md`](models/results/results_v1.md)
+
 ## Productionization Strategy
 
 ### Model Deployment Architecture
@@ -287,7 +309,7 @@ Different anomalies have different urgency levels, and the serving approach shou
         - Unusual motion pattern (ouside) during the night
 
 #### Batch Processing
-Isolation Forest by itself does not capture long-term temporal persistence — it only sees the features provided at inference time. While engineered time-window features (e.g., rolling means, streak counters) can extend its usefulness, some anomaly types require modeling longer sequences or non-linear temporal dependencies.
+Isolation Forest by itself does not capture long-term temporal persistence (Real-time active) — it only sees the features provided at inference time. Batch is more for learning user behavior for a long time in backend.
 
 - **For example**: analyzed using more complex models such as LSTMs, CNNs, or Transformers. These models can detect:
 	-   Gradual appliance degradation (e.g., rising energy consumption over weeks)

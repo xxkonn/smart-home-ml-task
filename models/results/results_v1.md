@@ -1,12 +1,15 @@
-# Isolation Forest Models - P### Overall Test Performance
+# Isolation Forest Models 
+### Overall Test Performance
 
 | Model | Accuracy | Precision | Recall | F1-Score | Anomalies Detected | False Positives |
-|-------|----------|-----------|--------|----------|-------------------|------------------|
+|-------|----------|-----------|--------|----------|-------------------|-----------------|
 | **estimators_300** | 94.81% | 56.65% | **99.12%** | 72.10% | 2708/2732 | 2072 |
 | **estimators_500** | 96.23% | 64.52% | 98.50% | 77.97% | 2691/2732 | 1480 |
 | **estimators_700** | **96.28%** | 64.83% | 98.46% | **78.19%** | 2690/2732 | 1459 |
 | **estimators_900** | **96.30%** | **64.96%** | **98.46%** | **78.28%** | 2690/2732 | **1451** |
-| **estimators_1100** | 96.26% | 64.70% | **98.54%** | 78.11% | 2692/2732 | 1469 |n### Validation Performance
+| **estimators_1100** | 96.26% | 64.70% | **98.54%** | 78.11% | 2692/2732 | 1469 |
+
+### Validation Performance
 
 | Model | Precision | Recall | F1-Score | False Positives |
 |-------|-----------|--------|----------|------------------|
@@ -154,6 +157,35 @@ Three optimized Isolation Forest models were trained with different parameter co
 4. **Optimal Estimators**: Performance peaks at 900 estimators with 96.30% accuracy and 78.28% F1-score. Further increases to 1100 estimators show diminishing returns, confirming 900 as the optimal configuration.
 
 5. **Consistent Performance**: All models show very stable performance across different anomaly types with precision consistently at 100% for individual anomaly types.
+
+## Performance Visualizations
+
+Comprehensive performance visualizations have been generated to analyze model behavior:
+
+### 📊 ROC Curves
+![ROC Curves - Validation & Test Sets](plots/roc_curves_validation_test.png)
+
+**ROC Curves for Validation and Test Sets** - Shows the trade-off between True Positive Rate and False Positive Rate across all models. All models demonstrate excellent performance with AUC scores above 0.96.
+
+### 📈 AUC Score Comparison
+![AUC Score Comparison](plots/auc_comparison_bar_chart.png)
+
+**AUC Score Bar Chart** - Direct comparison of Area Under Curve scores for all models on both validation and test sets. The 900-estimator model achieves the highest AUC score of 0.973.
+
+### 🎯 Confusion Matrices
+![Confusion Matrices - All Models](plots/confusion_matrices_all_models.png)
+
+**Detailed Confusion Matrices** - Shows true/false positives and negatives for each model with precision, recall, and F1-score metrics. All models maintain excellent recall (>98%) while achieving good precision.
+
+### 🔍 ROC Methodology Comparison
+![ROC Comparison: 3-Point vs Multi-Point](plots/roc_comparison_3point_vs_multipoint.png)
+
+**ROC Curve Methodology Comparison** - Demonstrates the difference between 3-point ROC approximation (used in this analysis) versus full multi-threshold ROC curves. Both approaches provide valid model comparisons.
+
+**Visualization Details:**
+- **Resolution**: 300 DPI publication quality
+- **Files**: All plots saved in `plots/` directory
+- **Report**: Detailed analysis in [`plots/visualization_report.md`](plots/visualization_report.md)
 
 ## Technical Specifications
 
