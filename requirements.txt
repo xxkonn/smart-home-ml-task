@@ -5,6 +5,7 @@ scikit-learn>=1.0.0
 
 # Machine learning for anomaly detection
 scipy>=1.7.0
+joblib>=1.0.0
 
 # Visualization
 matplotlib>=3.4.0

@@ -107,15 +107,75 @@ In the real world, it's impossible to cover all possible anomaly types. I design
 - People sometimes act unpredictably, which is hard to simulate
 - Only covers 6 common anomaly types, not all possible scenarios
 
-**Model use in this task**
-For model picking here are some key points I would consider:
-1. light model: could potentially running on the edge device
-2. prefer unsupervised model: because we don't have labeled data for anomaly detection.
-3. real-time detect, the ealier the better to trigger alarm
+# Model Picking
 
-- Isolation forest
-    - Unsupervised model, which make sense because in real world, we don't have labeled data for anomaly detection.
-    - It's not a time series model, I will enigneer the feature help the model pick up the sensor pattern regards time.
+**Model Selection Criteria for IoT Anomaly Detection:**
+
+For this smart home IoT anomaly detection task, I considered several key requirements:
+
+1. **Lightweight & Edge-Compatible**: Model should be deployable on edge devices with limited computational resources
+2. **Unsupervised Learning**: Real-world scenarios lack labeled anomaly data, making unsupervised approaches essential  
+3. **Real-Time Detection**: Early anomaly detection enables timely alerts and interventions
+4. **Robust to Sensor Noise**: IoT sensors often have measurement variability and occasional missing data
+
+## Models Evaluated
+
+### ✅ **Isolation Forest** (Selected)
+**Advantages:**
+- **Unsupervised**: No labeled training data required - perfect for real-world deployment
+- **Lightweight**: Tree-based structure suitable for edge computing  
+- **Fast Training & Inference**: Efficient for real-time applications
+- **Robust to Outliers**: Naturally handles noisy sensor data
+- **Feature Engineering Compatible**: Works well with engineered temporal features to capture time-series patterns
+- **Interpretable**: Can provide anomaly scores and feature importance
+
+**Implementation Notes:**
+- Since it's not inherently time-series aware, we engineer 128 temporal features (rolling statistics, lag features, time-based patterns)
+- Optimized parameters: 900 estimators, bootstrap sampling, warm-start for stability
+- Achieved 96.30% accuracy with excellent anomaly type coverage
+
+### 🔄 **Random Forest Classifier** (Future Consideration)
+**Advantages:**
+- **High Performance**: Excellent accuracy when all anomaly types are known
+- **Feature Importance**: Built-in feature ranking capabilities
+- **Robust**: Handles missing data and noise well
+
+**Limitations:**
+- **Supervised Requirement**: Needs labeled training data for all anomaly types
+- **Limited Generalization**: Cannot detect novel anomaly patterns not seen in training  
+- **Real-World Challenge**: Exhaustively labeling all possible anomalies is impractical
+
+**Use Case**: Suitable for controlled environments where anomaly types are well-defined and labeled data is available.
+
+### 🔄 **CNN Autoencoder** (Long-term Exploration)  
+**Advantages:**
+- **Deep Unsupervised Learning**: Can learn complex temporal patterns automatically
+- **Time-Series Native**: Naturally handles sequential sensor data
+- **Reconstruction-Based**: Detects anomalies through reconstruction error
+- **Flexible Architecture**: Can adapt to different sensor configurations
+
+**Challenges:**
+- **Computational Intensity**: Requires significant training time and computational resources
+- **Hyperparameter Sensitivity**: Extensive tuning needed for optimal performance
+- **Edge Deployment**: May be too resource-intensive for edge devices
+
+**Future Work**: Worth exploring for scenarios with abundant computational resources and complex temporal dependencies.
+
+## Additional Model Considerations
+
+### **LSTM Autoencoders**
+- Excellent for sequential pattern learning
+- Computationally intensive, similar challenges to CNN autoencoders
+- Better suited for longer temporal sequences
+
+### **Statistical Methods (Z-Score, IQR)**
+- Very lightweight and interpretable
+- Limited capability for multivariate anomaly detection
+- Good as baseline or secondary validation
+
+
+
+
 
 ## Quick Start
 
