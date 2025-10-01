@@ -1,6 +1,6 @@
 {
   "training_info": {
-    "timestamp": "2025-10-01T14:52:24.042635",
+    "timestamp": "2025-10-01T14:56:33.026639",
     "training_samples": 301484,
     "validation_samples": 40320,
     "test_samples": 40320,
@@ -9,14 +9,14 @@
   "validation_results": {
     "dataset": "validation",
     "overall_metrics": {
-      "precision": 0.5831603229527105,
-      "recall": 0.978328173374613,
-      "f1_score": 0.7307414366237895,
+      "precision": 0.6531461258450338,
+      "recall": 0.9721362229102167,
+      "f1_score": 0.7813374805598756,
       "support": 0,
-      "true_positives": 2528,
-      "true_negatives": 35929,
-      "false_positives": 1807,
-      "false_negatives": 56,
+      "true_positives": 2512,
+      "true_negatives": 36402,
+      "false_positives": 1334,
+      "false_negatives": 72,
       "total_samples": 40320,
       "total_anomalies": 2584,
       "total_normal": 37736
@@ -38,22 +38,22 @@
       },
       "type_3": {
         "precision": 1.0,
-        "recall": 0.9816272965879265,
-        "f1_score": 0.990728476821192,
+        "recall": 0.9606299212598425,
+        "f1_score": 0.9799196787148594,
         "support": 0,
         "samples": 381
       },
       "type_4": {
         "precision": 1.0,
-        "recall": 0.9832775919732442,
-        "f1_score": 0.9915682967959528,
+        "recall": 0.9698996655518395,
+        "f1_score": 0.9847198641765704,
         "support": 0,
         "samples": 299
       },
       "type_5": {
         "precision": 1.0,
-        "recall": 0.8829787234042553,
-        "f1_score": 0.9378531073446328,
+        "recall": 0.8723404255319149,
+        "f1_score": 0.9318181818181818,
         "support": 0,
         "samples": 376
       },
@@ -66,9 +66,9 @@
       }
     },
     "model_parameters": {
-      "n_estimators": 300,
-      "contamination": 0.03,
-      "max_samples": 0.7,
+      "n_estimators": 900,
+      "contamination": 0.02,
+      "max_samples": 0.9,
       "max_features": 0.8,
       "bootstrap": true,
       "warm_start": true,
@@ -225,14 +225,14 @@
   "test_results": {
     "dataset": "test",
     "overall_metrics": {
-      "precision": 0.5665271966527197,
-      "recall": 0.9912152269399708,
-      "f1_score": 0.7209797657082002,
+      "precision": 0.6496015455204057,
+      "recall": 0.9846266471449487,
+      "f1_score": 0.7827731703768369,
       "support": 0,
-      "true_positives": 2708,
-      "true_negatives": 35516,
-      "false_positives": 2072,
-      "false_negatives": 24,
+      "true_positives": 2690,
+      "true_negatives": 36137,
+      "false_positives": 1451,
+      "false_negatives": 42,
       "total_samples": 40320,
       "total_anomalies": 2732,
       "total_normal": 37588
@@ -240,8 +240,8 @@
     "anomaly_type_metrics": {
       "type_1": {
         "precision": 1.0,
-        "recall": 1.0,
-        "f1_score": 1.0,
+        "recall": 0.9980582524271845,
+        "f1_score": 0.9990281827016521,
         "support": 0,
         "samples": 515
       },
@@ -254,22 +254,22 @@
       },
       "type_3": {
         "precision": 1.0,
-        "recall": 0.9842696629213483,
-        "f1_score": 0.9920724801812004,
+        "recall": 0.9707865168539326,
+        "f1_score": 0.9851767388825542,
         "support": 0,
         "samples": 445
       },
       "type_4": {
         "precision": 1.0,
-        "recall": 0.9698996655518395,
-        "f1_score": 0.9847198641765704,
+        "recall": 0.9565217391304348,
+        "f1_score": 0.9777777777777777,
         "support": 0,
         "samples": 299
       },
       "type_5": {
         "precision": 1.0,
-        "recall": 0.9816091954022989,
-        "f1_score": 0.9907192575406032,
+        "recall": 0.9655172413793104,
+        "f1_score": 0.9824561403508771,
         "support": 0,
         "samples": 435
       },
@@ -282,9 +282,9 @@
       }
     },
     "model_parameters": {
-      "n_estimators": 300,
-      "contamination": 0.03,
-      "max_samples": 0.7,
+      "n_estimators": 900,
+      "contamination": 0.02,
+      "max_samples": 0.9,
       "max_features": 0.8,
       "bootstrap": true,
       "warm_start": true,
